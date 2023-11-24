@@ -5,5 +5,5 @@
   tasks:
     - name: Copy the script
       copy:
-        src: /home/speicher.sh
-        dest: /home/speicher.sh
+        src: /home/koadmin/speicher.sh
+        dest: /home/koadmin/speicher.sh
