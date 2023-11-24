@@ -1,0 +1,8 @@
+---
+- name: Copy Script to Servers
+  hosts: all
+  tasks:
+    - name: Copy the script
+      copy:
+        src: /home/speicher.sh
+        dest: /home/speicher.sh
