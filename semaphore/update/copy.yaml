@@ -6,4 +6,5 @@
     - name: Copy the script
       copy:
         src: /home/koadmin/speicher.sh
-        dest: /home/koadmin/speicher.sh
+        dest: /home/speicher.sh
+        remote_src: yes
