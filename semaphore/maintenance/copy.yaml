@@ -3,6 +3,7 @@
 
   become: true
   tasks:
-    - name: Copy certificate files
-    src: /tmp/2024
-    dest: /tmp/
+    - name: copy cert files
+      ansible.builtin.copy:
+      src: /tmp/2024
+      dest: /tmp/
