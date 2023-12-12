@@ -1,8 +1,8 @@
 ---
 - hosts: all
+
   become: true
   tasks:
     - name: Copy certificate files
-    synchronize:
     src: /tmp/2024
     dest: /tmp/
