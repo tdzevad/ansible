@@ -1,7 +1,8 @@
 ---
 - hosts: all
   become: true
-  - name: copy certificate files
-    ansible.builtin.copy:
-       src: /tmp/2024
-       dest: /tmp
+  tasks:
+    - name: Copy certificate files
+    synchronize:
+    src: /tmp/2024
+    dest: /tmp/
