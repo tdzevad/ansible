@@ -1,9 +1,0 @@
----
-- hosts: all
-
-  become: true
-  tasks:
-    - name: copy certificate files
-    copy:
-    src: /tmp/2024
-    dest: /tmp/
