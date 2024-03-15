@@ -1,0 +1,15 @@
+---
+- name: Fetch GPG key for PHP packages
+  hosts: all
+  become: yes  # This is necessary to ensure the command is run with sudo privileges
+  tasks:
+    - name: Import the GPG key for the PHP repository
+      ansible.builtin.shell: 
+        cmd: "apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg"
+      args:
+        warn: no  # This option is to avoid warnings about using `apt-key` as it's deprecated in favor of signed-by option with apt
+      register: result
+
+    - name: Output the result of the GPG key import
+      ansible.builtin.debug:
+        var: result.stdout_lines
