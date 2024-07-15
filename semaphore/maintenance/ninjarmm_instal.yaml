@@ -11,7 +11,7 @@
 
     - name: Download the .deb file
       get_url:
-        url: "https://eu.ninjarmm.com/agent/installer/865f7f76-cc72-4200-b9a6-ea36abee4665/pdagogischehochschulewienhauptsitz0e9723-5.9.9652-installer-x86-64.deb"
+        url: "https://eu.ninjarmm.com/agent/installer/865f7f76-cc72-4200-b9a6-ea36abee4665/pdagogischehochschulewienhauptsitz943c7e-5.9.9652-installer-x86-64.deb"
         dest: /tmp/installer-x86-64.deb
 
     - name: Install the .deb package
