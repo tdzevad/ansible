@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update package index
+      apt:
+        update_cache: yes
+
+    - name: Upgrade the kernel package
+      apt:
+        name: "linux-image-{{ ansible_kernel }}"
+        state: latest
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+
+    - name: Reboot the server if the kernel was upgraded
+      reboot:
+        msg: "Rebooting the server after kernel upgrade"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+
+    - name: Wait for the server to come back online
+      wait_for_connection:
+        timeout: 300
+
+    - name: Run apt autoremove to remove unnecessary packages
+      apt:
+        autoremove: yes
