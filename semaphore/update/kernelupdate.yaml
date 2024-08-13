@@ -1,19 +1,28 @@
 ---
 - hosts: all
   become: yes
-  tasks:
-    - name: Update package index
-      apt:
-        update_cache: yes
+  vars:
+    desired_kernel_version: "5.10.0-32-amd64"
 
-    - name: Upgrade the kernel package
+  tasks:
+    - name: Get current kernel version
+      command: uname -r
+      register: current_kernel_version
+
+    - name: Check if current kernel version matches desired version
+      debug:
+        msg: "Current kernel version: {{ current_kernel_version.stdout }}"
+    
+    - name: Upgrade the kernel if not at the desired version
       apt:
-        name: "linux-image-{{ ansible_kernel }}"
-        state: latest
+        name: "linux-image-{{ desired_kernel_version }}"
+        state: present
+      when: current_kernel_version.stdout != desired_kernel_version
 
     - name: Upgrade all packages
       apt:
         upgrade: dist
+      when: current_kernel_version.stdout != desired_kernel_version
 
     - name: Reboot the server if the kernel was upgraded
       reboot:
@@ -22,10 +31,12 @@
         reboot_timeout: 600
         pre_reboot_delay: 0
         post_reboot_delay: 30
+      when: current_kernel_version.stdout != desired_kernel_version
 
     - name: Wait for the server to come back online
       wait_for_connection:
         timeout: 300
+      when: current_kernel_version.stdout != desired_kernel_version
 
     - name: Run apt autoremove to remove unnecessary packages
       apt:
