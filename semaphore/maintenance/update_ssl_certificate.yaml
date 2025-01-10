@@ -1,0 +1,35 @@
+---
+- name: Update SSL Certificates and Apache Configurations
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy the 2025 folder to /etc/ssl/
+      ansible.builtin.copy:
+        src: ./tmp/2025
+        dest: /etc/ssl/
+        owner: root
+        group: root
+        mode: '0644'
+        remote_src: no
+
+    - name: Find configuration files in /etc/apache2/sites-available/ containing SSL paths
+      ansible.builtin.find:
+        paths: /etc/apache2/sites-available/
+        recurse: yes
+        patterns: "*.conf"
+        contains: "/etc/ssl/2024/"
+      register: apache_site_files
+
+    - name: Update paths from 2024 to 2025 in Apache configuration files
+      ansible.builtin.lineinfile:
+        path: "{{ item.path }}"
+        regexp: '/etc/ssl/2024/'
+        line: "{{ item.line | regex_replace('/etc/ssl/2024/', '/etc/ssl/2025/') }}"
+        backrefs: yes
+      with_items: "{{ apache_site_files.files }}"
+      when: apache_site_files.matched > 0
+
+    - name: Restart Apache to apply changes
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
